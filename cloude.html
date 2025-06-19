@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoboHack 2025 - AurinkoLab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(ellipse at top left, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+    }
+    .headline-font {
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    /* Mobile-first approach for navigation */
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #0f1629;
+      border-top: 1px solid #2d3748;
+      z-index: 50;
+    }
+    
+    .mobile-menu.active {
+      display: block;
+    }
+    
+    .mobile-menu-item {
+      display: block;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #2d3748;
+      transition: background-color 0.2s;
+    }
+    
+    .mobile-menu-item:hover {
+      background-color: #1a2332;
+    }
+    
+    /* About cards responsive */
+    .about-card {
+      background-color: #1a2036;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      text-align: left;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      min-height: 160px;
+    }
+    
+    .about-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(74, 144, 226, 0.2);
+    }
+
+    .about-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #4a90e2;
+    }
+
+    .about-card .value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+      background-image: linear-gradient(to right, #4a90e2, #6a4ae2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .about-card .label {
+      font-size: 1rem;
+      color: #a0aec0;
+    }
+    
+    /* Countdown responsive */
+    .countdown-item {
+      background-color: #0f1a30;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      flex: 1;
+      min-width: 70px;
+      border: 2px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    
+    .countdown-item:hover {
+      border-color: #4a90e2;
+    }
+    
+    .countdown-number {
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      font-weight: 700;
+      color: #ffffff;
+    }
+    
+    .countdown-label {
+      font-size: clamp(0.75rem, 2vw, 0.875rem);
+      color: #9ca3af;
+      margin-top: 0.25rem;
+    }
+    
+    /* Hero section responsive */
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 7rem);
+      line-height: 0.9;
+    }
+    
+    .hero-subtitle {
+      font-size: clamp(1.125rem, 3vw, 1.5rem);
+    }
+    
+    .hero-description {
+      font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+    }
+    
+    /* Robot image responsive */
+    .robot-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 2rem;
+    }
+    
+    .robot-placeholder {
+      width: 200px;
+      height: 300px;
+      background: linear-gradient(135deg, #4a90e2, #6a4ae2);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      box-shadow: 0 20px 40px rgba(74, 144, 226, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .robot-placeholder::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      animation: shine 3s infinite;
+    }
+
+      /* Animations for the Network Diagram */
+      @keyframes nodePulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes hubRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @keyframes lineFlow {
+        0% { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: -200; } /* Adjust based on line length */
+    }
+
+    .node-animated {
+        animation: nodePulse 2s ease-in-out infinite;
+    }
+
+    .hub-animated {
+        animation: hubRotate 10s linear infinite;
+        transform-origin: center;
+    }
+
+    .line-animated {
+        stroke-dasharray: 50; /* Length of dashes */
+        animation: lineFlow 3s linear infinite;
+    }
+    
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    /* Responsive breakpoints */
+    @media (max-width: 640px) {
+      .about-card .icon {
+        font-size: 2rem;
+      }
+      
+      .about-card .value {
+        font-size: 2rem;
+      }
+      
+      .countdown-item {
+        padding: 0.75rem 0.5rem;
+      }
+      
+      .robot-placeholder {
+        width: 150px;
+        height: 225px;
+        font-size: 1.125rem;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .robot-container {
+        position: absolute;
+        right: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-top: 0;
+      }
+      
+      .robot-placeholder {
+        width: 250px;
+        height: 375px;
+        font-size: 1.75rem;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .robot-placeholder {
+        width: 300px;
+        height: 450px;
+        font-size: 2rem;
+      }
+    }
+    
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body class="text-white">
+  <!-- Navigation Bar -->
+  <nav class="bg-[#121f3d] text-white px-4 sm:px-6 py-4 shadow-lg relative">
+    <div class="flex justify-between items-center">
+      <div class="text-xl sm:text-2xl font-bold headline-font">
+        AurinkoLab: <span class="text-blue-500">Robo</span><span class="text-green-400">Hack</span>
+      </div>
+      
+      <!-- Desktop Menu -->
+      <ul class="hidden lg:flex gap-6 text-sm font-semibold">
+        <li><a href="#home" class="hover:text-blue-400 transition-colors">Home</a></li>
+        <li><a href="#about" class="hover:text-blue-400 transition-colors">About</a></li>
+        <li><a href="#categories" class="hover:text-blue-400 transition-colors">Events</a></li>
+        <li><a href="#schedule" class="hover:text-blue-400 transition-colors">Schedule</a></li>
+        <li><a href="#sponsors" class="hover:text-blue-400 transition-colors">Sponsors</a></li>
+        <li><a href="#faq" class="hover:text-blue-400 transition-colors">FAQ</a></li>
+      </ul>
+      
+      <!-- Register Button & Mobile Menu Toggle -->
+      <a href="https://forms.office.com/r/8ipc3J1b0S" class="hidden md:block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-all duration-300" target="_blank">Register Now</a>
+      <button class="md:hidden text-white focus:outline-none hamburger-menu" aria-label="Toggle navigation">
+          <i class="fas fa-bars text-2xl"></i>
+      </button>
+        
+        <!-- Mobile Menu Button -->
+        <button class="lg:hidden text-white hover:text-blue-400 transition-colors" id="mobile-menu-btn">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="#home" class="mobile-menu-item text-white hover:text-blue-400">Home</a>
+      <a href="#about" class="mobile-menu-item text-white hover:text-blue-400">About</a>
+      <a href="#categories" class="mobile-menu-item text-white hover:text-blue-400">Categories</a>
+      <a href="#schedule" class="mobile-menu-item text-white hover:text-blue-400">Schedule</a>
+      <a href="#sponsors" class="mobile-menu-item text-white hover:text-blue-400">Sponsors</a>
+      <a href="#faq" class="mobile-menu-item text-white hover:text-blue-400">FAQ</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="relative py-16 sm:py-24 lg:py-32 px-4 sm:px-8 lg:px-20">
+    <div class="container mx-auto">
+      <div class="flex flex-col lg:flex-row items-center justify-between">
+        <!-- Left Text Block -->
+        <div class="z-10 max-w-2xl text-center lg:text-left mb-8 lg:mb-0">
+          <h1 class="hero-title font-bold text-white mb-4 sm:mb-6 headline-font">
+            <span class="text-blue-500">ROBO</span><span class="text-green-400">HACK</span> 
+            <br class="sm:hidden">
+            <span class="text-white">2025</span>
+          </h1>
+          <h2 class="hero-subtitle text-gray-300 mb-4 sm:mb-6 font-semibold">
+            The Ultimate Robotics Innovation Challenge
+          </h2>
+          <p class="hero-description text-gray-400 mb-6 sm:mb-8">
+            Are you a 12-16 year-olds teenager with an interest in and a passion for robotics? This is your stage. Your time. Your imagination.
+          </p>
+          
+          <!-- Action Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 mb-8 sm:mb-12 justify-center lg:justify-start">
+            <a href="#register" class="bg-blue-500 hover:bg-blue-400 text-white font-semibold px-6 py-3 rounded-lg transition-colors text-center">
+              Register Now
+            </a>
+            <a href="#about" class="border border-green-400 text-green-400 hover:bg-green-400 hover:text-black font-semibold px-6 py-3 rounded-lg transition-all text-center">
+              Learn More
+            </a>
+          </div>
+
+          <!-- Countdown Timer -->
+          <div class="max-w-md mx-auto lg:mx-0">
+            <h3 class="text-xl sm:text-2xl font-semibold mb-4 headline-font text-center lg:text-left">
+              Hackathon Starts In
+            </h3>
+            <div class="grid grid-cols-4 gap-2 sm:gap-4" id="countdown">
+              <div class="countdown-item text-center">
+                <div class="countdown-number" id="days">00</div>
+                <div class="countdown-label">Days</div>
+              </div>
+              <div class="countdown-item text-center">
+                <div class="countdown-number" id="hours">00</div>
+                <div class="countdown-label">Hours</div>
+              </div>
+              <div class="countdown-item text-center">
+                <div class="countdown-number" id="minutes">00</div>
+                <div class="countdown-label">Minutes</div>
+              </div>
+              <div class="countdown-item text-center">
+                <div class="countdown-number" id="seconds">00</div>
+                <div class="countdown-label">Seconds</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Robot Illustration -->
+        <div class="robot-container lg:relative lg:right-0 lg:top-0 lg:transform-none">
+            <img src="./src/assets/robot-0.svg" alt="Robot" class="w-52 sm:w-72 md:w-96 lg:w-[500px] opacity-90">
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- About RoboHack Section -->
+    <section id="about" class="py-16 sm:py-20 px-4 sm:px-8">
+      <div class="container mx-auto">
+        <div class="text-center mb-12 sm:mb-16">
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-white headline-font">
+            About <span class="text-blue-500">Robo</span><span class="text-green-400">Hack</span>
+          </h2>
+          <div class="w-16 sm:w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+        </div>
+  
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <!-- Left Content -->
+          <div class="space-y-6">
+            <p class="text-base sm:text-lg text-gray-400 leading-relaxed">
+              AurinkoLab: RoboHack is a super intense 48-hour event bringing together young robot builders, designers, and tech lovers to innovate!
+            </p>
+            <p class="text-base sm:text-lg text-gray-400 leading-relaxed">
+              Participants will form teams to design, build, and program robots to solve real-world challenges. Whether you've built robots before or are totally new to it, dive into RoboHack to learn, work with others, and bring your ideas to life!
+            </p>
+  
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-2 gap-4 sm:gap-6 mt-8">
+              <div class="about-card">
+                <i class="fas fa-clock icon"></i>
+                <!-- <div class="value text-blue-500">48</div> -->
+                <div class="label">48 hours of Innovation</div>
+              </div>
+              <div class="about-card">
+                <i class="fas fa-users icon"></i>
+                <!-- <div class="value text-green-400">50+</div> -->
+                <div class="label">50+ participants</div>
+              </div>
+              <div class="about-card">
+                <i class="fas fa-trophy icon"></i>
+                <!-- <div class="value text-blue-500">$25K</div> -->
+                <div class="label">Cool Prizes</div>
+              </div>
+              <div class="about-card">
+                <i class="fas fa-chalkboard-teacher icon"></i>
+                <!-- <div class="value text-green-400">20+</div> -->
+                <div class="label">Industry Mentors</div>
+              </div>
+            </div>
+          </div>
+  
+          <!-- <div class="md:w-1/2 flex justify-center items-center relative"> -->
+            <!-- Right Illustration with Network Diagram -->
+            <div class="relative w-full max-w-md">
+                <div class="bg-[#1a2036] rounded-2xl p-8 border border-gray-700">
+                    <div class="text-center mb-6">
+                        <div class="inline-block bg-blue-500 bg-opacity-20 rounded-full px-6 py-2 mb-4">
+                            AurinkoLab: <span class="text-green-400">Robo</span><span class="text-blue-500">Hack</span>
+                        </div>
+                    </div>
+
+                    <!-- Network Diagram -->
+                    <div class="relative h-48 flex items-center justify-center">
+                        <!-- Central Hub -->
+                        <div class="absolute w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center hub-animated">
+                            <i class="fas fa-microchip text-white"></i>
+                        </div>
+
+                        <!-- Connected Nodes -->
+                        <div class="absolute top-4 left-8 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center node-animated" style="animation-delay: 0s;">
+                            <i class="fas fa-wifi text-white text-xs"></i>
+                        </div>
+                        <div class="absolute top-4 right-8 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center node-animated" style="animation-delay: 0.5s;">
+                            <i class="fas fa-cog text-white text-xs"></i>
+                        </div>
+                        <div class="absolute bottom-4 left-12 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center node-animated" style="animation-delay: 1s;">
+                            <i class="fas fa-camera text-white text-xs"></i>
+                        </div>
+                        <div class="absolute bottom-4 right-12 w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center node-animated" style="animation-delay: 1.5s;">
+                            <i class="fas fa-brain text-white text-xs"></i>
+                        </div>
+
+                        <!-- Connection Lines -->
+                        <svg class="absolute inset-0 w-full h-full pointer-events-none">
+                            <line x1="50%" y1="50%" x2="25%" y2="20%" stroke="#4a90e2" stroke-width="2" opacity="0.6" class="line-animated"/>
+                            <line x1="50%" y1="50%" x2="75%" y2="20%" stroke="#4a90e2" stroke-width="2" opacity="0.6" class="line-animated" style="animation-delay: 0.75s;"/>
+                            <line x1="50%" y1="50%" x2="30%" y2="80%" stroke="#4a90e2" stroke-width="2" opacity="0.6" class="line-animated" style="animation-delay: 1.5s;"/>
+                            <line x1="50%" y1="50%" x2="70%" y2="80%" stroke="#4a90e2" stroke-width="2" opacity="0.6" class="line-animated" style="animation-delay: 2.25s;"/>
+                        </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>  
+
+  <!-- Robot Battles Section -->
+  <section id="categories" class="py-16 sm:py-20 px-4 sm:px-8">
+    <div class="container mx-auto">
+      <div class="text-center mb-12 sm:mb-16">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-white headline-font">
+          Robot <span class="text-blue-500">Battles</span>
+        </h2>
+        <div class="w-16 sm:w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+        <p class="text-base sm:text-lg lg:text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
+          Choose your challenge and showcase your robotics skills in the all or just one of exciting robot buttles
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <!-- FootBall -->
+        <div class="category-card bg-[#1a2036] rounded-xl p-6 sm:p-8 border border-gray-700 hover:border-blue-500 transition-all duration-300 group">
+          <div class="flex items-center justify-center w-16 h-16 bg-blue-500 bg-opacity-20 rounded-full mb-6 group-hover:bg-opacity-30 transition-all">
+            <i class="fas fa-robot text-2xl text-blue-500"></i>
+          </div>
+          
+          <h3 class="text-2xl font-bold text-white mb-4 headline-font">Football Robots</h3>
+          <p class="text-gray-400 mb-6 leading-relaxed">
+            Design and program autonomous robots to compete in a game of robot football
+          </p>
+          
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-green-400 mr-3"></i>
+              <span>Maze solving challenges</span>
+            </li>
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-green-400 mr-3"></i>
+              <span>Obstacle avoidance</span>
+            </li>
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-green-400 mr-3"></i>
+              <span>Path optimization</span>
+            </li>
+          </ul>
+          
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-blue-500 font-bold text-xl">08-10.08.2025 Espoo</span>
+            </div>
+            <!-- <button class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+              Learn More
+            </button> -->
+          </div>
+        </div>
+
+        <!-- Smart Farm Assistant -->
+        <div class="category-card bg-[#1a2036] rounded-xl p-6 sm:p-8 border border-gray-700 hover:border-green-400 transition-all duration-300 group">
+          <div class="flex items-center justify-center w-16 h-16 bg-green-400 bg-opacity-20 rounded-full mb-6 group-hover:bg-opacity-30 transition-all">
+            <i class="fas fa-hand-paper text-2xl text-green-400"></i>
+          </div>
+          
+          <h3 class="text-2xl font-bold text-white mb-4 headline-font">Smart Farm Assistant</h3>
+          <p class="text-gray-400 mb-6 leading-relaxed">
+            Create a robot that can perform tasks on a miniature farm
+          </p>
+          
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-blue-500 mr-3"></i>
+              <span>Pick and place tasks</span>
+            </li>
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-blue-500 mr-3"></i>
+              <span>Assembly operations</span>
+            </li>
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-blue-500 mr-3"></i>
+              <span>Soft robotics</span>
+            </li>
+          </ul>
+          
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-green-400 font-bold text-xl">14-16.11 2025, Helsinki</span>
+            </div>
+            <!-- <button class="bg-green-500 hover:bg-green-400 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+              Learn More
+            </button> -->
+          </div>
+        </div>
+
+        <!-- Automated Delivery System -->
+        <div class="category-card bg-[#1a2036] rounded-xl p-6 sm:p-8 border border-gray-700 hover:border-yellow-500 transition-all duration-300 group">
+          <div class="flex items-center justify-center w-16 h-16 bg-yellow-500 bg-opacity-20 rounded-full mb-6 group-hover:bg-opacity-30 transition-all">
+            <i class="fas fa-bolt text-2xl text-yellow-500"></i>
+          </div>
+          
+          <h3 class="text-2xl font-bold text-white mb-4 headline-font">RoboDelivery System</h3>
+          <p class="text-gray-400 mb-6 leading-relaxed">
+            Build a robot that can pick up different "packages" (various objects)
+          </p>
+          
+          <ul class="space-y-3 mb-8">
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-yellow-500 mr-3"></i>
+              <span>Getting Around Smartly</span>
+            </li>
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-yellow-500 mr-3"></i>
+              <span>Staying Powered Up</span>
+            </li>
+            <li class="flex items-center text-gray-300">
+              <i class="fas fa-check-circle text-yellow-500 mr-3"></i>
+              <span>Seeing and Grabbing Stuf</span>
+            </li>
+          </ul>
+          
+          <div class="flex justify-between items-center">
+            <div>
+              <span class="text-yellow-500 font-bold text-xl">06-08.03.2026, Espoo</span>
+            </div>
+          <!-- <button class="bg-yellow-500 hover:bg-yellow-400 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+            Learn More
+          </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Sponsors Section -->
+  <section id="sponsors" class="py-16 sm:py-20 px-4 sm:px-8">
+    <div class="container mx-auto">
+      <div class="text-center mb-12 sm:mb-16">
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-white headline-font">
+          Our <span class="text-blue-500">Sponsors</span>
+        </h2>
+        <div class="w-16 sm:w-24 h-1 bg-blue-500 mx-auto mb-8"></div>
+        <p class="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          RoboHack is made possible by the generous support of our sponsors
+        </p>
+      </div>
+
+      <!-- Platinum Sponsors -->
+      <div class="mb-16">
+        <!-- <h3 class="text-2xl sm:text-3xl font-bold text-white text-center mb-8 headline-font">
+          Platinum Sponsors
+        </h3> -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div class="sponsor-card bg-[#1a2036] rounded-xl p-8 border border-gray-700 hover:border-green-400 transition-all duration-300 group">
+            <div class="flex items-center justify-center h-32">
+              <div class="w-20 h-20 bg-green-400 bg-opacity-20 rounded-full flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                <i class="fas fa-circle text-3xl text-green-400"></i>
+              </div>
+            </div>
+            <h4 class="text-xl font-bold text-white text-center mt-4 headline-font">Espoon nuorisopalvelut</h4>
+          </div>
+          <div class="sponsor-card bg-[#1a2036] rounded-xl p-8 border border-gray-700 hover:border-blue-500 transition-all duration-300 group">
+            <div class="flex items-center justify-center h-32">
+              <div class="w-20 h-20 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                <i class="fas fa-plus text-3xl text-blue-500"></i>
+              </div>
+            </div>
+            <h4 class="text-xl font-bold text-white text-center mt-4 headline-font">TECH CORP</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gold Sponsors
+      <div>
+        <h3 class="text-2xl sm:text-3xl font-bold text-white text-center mb-8 headline-font">
+          Gold Sponsors
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div class="sponsor-card bg-[#1a2036] rounded-xl p-6 border border-gray-700 hover:border-yellow-500 transition-all duration-300 group">
+            <div class="flex items-center justify-center h-24">
+              <div class="w-16 h-16 bg-yellow-500 bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                <i class="fas fa-square text-2xl text-yellow-500"></i>
+              </div>
+            </div>
+            <h4 class="text-lg font-bold text-white text-center mt-3 headline-font">FUTURE SYSTEMS</h4>
+          </div>
+          
+          <div class="sponsor-card bg-[#1a2036] rounded-xl p-6 border border-gray-700 hover:border-pink-500 transition-all duration-300 group">
+            <div class="flex items-center justify-center h-24">
+              <div class="w-16 h-16 bg-pink-500 bg-opacity-20 rounded-full flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                <i class="fas fa-circle text-2xl text-pink-500"></i>
+              </div>
+            </div>
+            <h4 class="text-lg font-bold text-white text-center mt-3 headline-font">QUANTUM ROBOTICS</h4>
+          </div>
+          
+          <div class="sponsor-card bg-[#1a2036] rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 group">
+            <div class="flex items-center justify-center h-24">
+              <div class="w-16 h-16 bg-purple-500 bg-opacity-20 rounded-lg flex items-center justify-center group-hover:bg-opacity-30 transition-all">
+                <i class="fas fa-th text-2xl text-purple-500"></i>
+              </div>
+            </div>
+            <h4 class="text-lg font-bold text-white text-center mt-3 headline-font">NEXUS AI</h4>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuIcon = mobileMenuBtn.querySelector('i');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('active');
+      if (mobileMenu.classList.contains('active')) {
+        mobileMenuIcon.classList.remove('fa-bars');
+        mobileMenuIcon.classList.add('fa-times');
+      } else {
+        mobileMenuIcon.classList.remove('fa-times');
+        mobileMenuIcon.classList.add('fa-bars');
+      }
+    });
+
+    // Close mobile menu when clicking on a link
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu-item');
+    mobileMenuLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        mobileMenuIcon.classList.remove('fa-times');
+        mobileMenuIcon.classList.add('fa-bars');
+      });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('nav')) {
+        mobileMenu.classList.remove('active');
+        mobileMenuIcon.classList.remove('fa-times');
+        mobileMenuIcon.classList.add('fa-bars');
+      }
+    });
+
+    // Countdown timer
+    const countdown = () => {
+      const eventDate = new Date("2025-08-08T10:00:00").getTime();
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = eventDate - now;
+
+        if (distance < 0) {
+          clearInterval(interval);
+          document.getElementById("countdown").innerHTML = 
+            "<div class='col-span-4 text-center'><p class='text-lg font-semibold text-green-400'>The hackathon has started!</p></div>";
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("days").textContent = days.toString().padStart(2, '0');
+        document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
+        document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
+        document.getElementById("seconds").textContent = seconds.toString().padStart(2, '0');
+      }, 1000);
+    };
+
+    // Start countdown
+    countdown();
+  </script>
+</body>
+</html>
